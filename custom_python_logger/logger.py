@@ -9,17 +9,10 @@ from typing import Optional, Any
 from colorlog import ColoredFormatter
 
 
-def get_project_path(project_name: str) -> str:
-    current_path = Path(__file__).parent
-    while current_path != current_path.parent:
-        if str(current_path).endswith(f'/{project_name}'):
-            return str(current_path)
-        current_path = current_path.parent
-    raise FileNotFoundError(
-        f'Project "{project_name}" not found in any parent directories.\n'
-        f'Current path: {Path(__file__)}',
-    )
-
+def get_root_project_path() -> Path:
+    if 'venv' in str(Path(__file__)):
+        return Path(__file__).parents[5]
+    return Path(__file__).parent
 
 def print_before_logger(project_name: str) -> None:
     main_string = f'Start "{project_name}" Process'
@@ -132,6 +125,10 @@ def get_logger(
         Configured logger
     """
     print_before_logger(project_name=project_name)
+
+    if not log_file:
+        log_file = f'{get_root_project_path()}/logs/{project_name}.log'
+        log_file = log_file.lower().replace(' ', '_')
 
     configure_logging(
         log_level=logging.DEBUG,
