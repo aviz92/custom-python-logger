@@ -1,63 +1,27 @@
 .
-├── .dockerignore
 ├── .gitignore
+├── .pytest_cache
+│     ├── .gitignore
+│     ├── CACHEDIR.TAG
+│     ├── README.md
+│     └── v
+│         └── cache
+│             ├── lastfailed
+│             ├── nodeids
+│             └── stepwise
+├── LICENSE
+├── MANIFEST.in
 ├── README.md
-├── _virtualenv_handler.py
-├── clean__pycache__.py
-├── g2k
+├── custom_python_logger
 │     ├── __init__.py
-│     ├── ci-cd
-│     │     ├── ci-cd-tools.md
-│     │     └── github-actions
-│     │         └── workflows
-│     │             ├── ci.yml
-│     │             ├── deploy-pr.yaml
-│     │             ├── deploy.yaml
-│     │             ├── endpoint_tests.yml
-│     │             └── trigger_jenkins.yml
-│     ├── general
-│     │     └── tree_structure.md
-│     ├── python_patterns
-│     │     ├── __init__.py
-│     │     ├── asynio_task_group.py
-│     │     ├── dataclass_namedtuple_typedict.py
-│     │     ├── dependency_injection.py
-│     │     ├── desctibe.py
-│     │     ├── instance_manager.py
-│     │     ├── lru_cache.py
-│     │     ├── metaclass.py
-│     │     ├── observer_pattern.py
-│     │     ├── plugin_metadata.py
-│     │     ├── property_cachedproperty.py
-│     │     └── signal_handling.py
-│     └── web
-│         └── web-extensions.md
-├── infrastructure
-│     ├── __init__.py
-│     ├── consts
-│     │     ├── __init__.py
-│     │     ├── global_const.py
-│     │     ├── python_commands.py
-│     │     └── units.py
-│     ├── decorators
-│     │     ├── __init__.py
-│     │     ├── telemetry.py
-│     │     └── timer.py
-│     ├── instance_manager.py
-│     ├── logger_infrastructure
-│     │     ├── __init__.py
-│     │     ├── logger.py
-│     │     └── logger_test.py
-│     └── utils
-│         ├── __init__.py
-│         ├── date_time.py
-│         ├── execute.py
-│         ├── file_utils.py
-│         ├── network.py
-│         ├── path_utils.py
-│         └── random_utils.py
-├── logo_my_name.py
+│     ├── logger.py
+│     └── usage_example.py
 ├── project_structure.txt
-└── requirements.txt
+├── pyproject.toml
+├── requirements.txt
+├── setup.py
+└── tests
+    ├── __init__.py
+    └── test_logger.py
 
-13 directories, 48 files
+6 directories, 19 files
