@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='custom-python-logger',
-    version='0.1.0',
+    version='0.1.1',
     packages=find_packages(include=['custom_python_logger', 'custom_python_logger.*']),
     install_requires=[
         'colorlog>=4.0.0',
@@ -18,6 +18,9 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/aviz92/custom-python-logger',
+    project_urls={
+        'Repository': 'https://github.com/aviz92/custom-python-logger',
+    },
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
