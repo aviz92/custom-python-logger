@@ -9,4 +9,30 @@ pip install custom-python-logger
 ```
 
 ## Usage
-please see the [usage_example](custom_python_logger/usage_example.py) file for more details.
+```python
+import logging
+from custom_python_logger.logger import get_logger
+
+def main():
+    logger = get_logger(
+        project_name='Logger Project Test',
+        log_level=logging.DEBUG,
+        extra={'user': 'test_user'}
+    )
+
+    logger.debug("This is a debug message.")
+    logger.info("This is an info message.")
+    logger.step("This is a step message.")
+    logger.warning("This is a warning message.")
+
+    try:
+        _ = 1 / 0
+    except ZeroDivisionError:
+        logger.exception("This is an exception message.")
+
+    logger.critical("This is a critical message.")
+
+
+if __name__ == '__main__':
+    main()
+```
