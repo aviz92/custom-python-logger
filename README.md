@@ -36,3 +36,18 @@ def main():
 if __name__ == '__main__':
     main()
 ```
+
+---
+
+## 🤝 Contributing
+If you have a helpful tool, pattern, or improvement to suggest:
+Fork the repo <br>
+Create a new branch <br>
+Submit a pull request <br>
+I welcome additions that promote clean, productive, and maintainable development. <br>
+
+---
+
+## 🙏 Thanks
+Thanks for exploring this repository! <br>
+Happy coding! <br>
