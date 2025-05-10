@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='custom-python-logger',
-    version='0.2.1',
+    version='1.0.0',
     packages=find_packages(include=['custom_python_logger', 'custom_python_logger.*']),
     install_requires=[
         'colorlog>=4.0.0',
