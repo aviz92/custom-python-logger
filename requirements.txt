@@ -3,3 +3,4 @@ wheel
 colorlog
 pytest
 pathlib
+PyYAML

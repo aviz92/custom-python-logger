@@ -6,6 +6,7 @@ import time
 from logging import LoggerAdapter, Logger
 from pathlib import Path
 from typing import Optional, Any
+import yaml
 from colorlog import ColoredFormatter
 
 
@@ -154,3 +155,12 @@ def json_pretty_format(
         default: callable = None
 ) -> str:
     return json.dumps(data, indent=indent, sort_keys=sort_keys, default=default)
+
+
+def yaml_pretty_format(
+        data: any,
+        indent: int = 4,
+        sort_keys: bool = False,
+        allow_unicode=True
+) -> str:
+    return yaml.dump(data, sort_keys=sort_keys, indent=indent, allow_unicode=allow_unicode)
