@@ -1,5 +1,5 @@
 # logger.py
-
+import json
 import logging
 import os
 import time
@@ -13,6 +13,7 @@ def get_root_project_path() -> Path:
     if 'venv' in str(Path(__file__)):
         return Path(__file__).parents[5]
     return Path(__file__).parent
+
 
 def print_before_logger(project_name: str) -> None:
     main_string = f'Start "{project_name}" Process'
@@ -39,11 +40,11 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
 
 
 def configure_logging(
-    log_format: str,
-    utc: bool,
-    log_level: int = logging.INFO,
-    log_file: Optional[str] = None,
-    console_output: bool = True,
+        log_format: str,
+        utc: bool,
+        log_level: int = logging.INFO,
+        log_file: Optional[str] = None,
+        console_output: bool = True,
 ) -> None:
     """
     Configure global logging settings.
@@ -101,13 +102,13 @@ def configure_logging(
 
 
 def get_logger(
-    project_name: str,
-    extra: Optional[dict[str, Any]] = None,
-    log_format: str = "%(asctime)s | %(levelname)-10s(l.%(levelno)s) | %(filename)s:%(lineno)s | %(message)s",
-    log_level: int = logging.INFO,
-    log_file: str = None,
-    console_output: bool = True,
-    utc: bool = False,
+        project_name: str,
+        extra: Optional[dict[str, Any]] = None,
+        log_format: str = "%(asctime)s | %(levelname)-10s(l.%(levelno)s) | %(filename)s:%(lineno)s | %(message)s",
+        log_level: int = logging.INFO,
+        log_file: str = None,
+        console_output: bool = True,
+        utc: bool = False,
 ) -> CustomLoggerAdapter[Logger | LoggerAdapter[Any] | Any] | Logger:
     """
     Get a named logger with optional extra context.
@@ -144,3 +145,12 @@ def get_logger(
         logger.setLevel(log_level)
 
     return CustomLoggerAdapter(logger, extra)
+
+
+def json_pretty_format(
+        data: any,
+        indent: int = 4,
+        sort_keys: bool = True,
+        default: callable = None
+) -> str:
+    return json.dumps(data, indent=indent, sort_keys=sort_keys, default=default)
