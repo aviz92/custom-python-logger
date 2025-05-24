@@ -11,15 +11,12 @@ pip install custom-python-logger
 ## Usage
 ```python
 import logging
-from custom_python_logger.logger import get_logger
+from custom_python_logger.logger import get_logger, CustomLoggerAdapter
+
+logger: CustomLoggerAdapter = CustomLoggerAdapter(logging.getLogger(__name__))
+
 
 def main():
-    logger = get_logger(
-        project_name='Logger Project Test',
-        log_level=logging.DEBUG,
-        extra={'user': 'test_user'}
-    )
-
     logger.debug("This is a debug message.")
     logger.info("This is an info message.")
     logger.step("This is a step message.")
@@ -34,6 +31,12 @@ def main():
 
 
 if __name__ == '__main__':
+    _ = get_logger(
+        project_name='Logger Project Test',
+        log_level=logging.DEBUG,
+        extra={'user': 'test_user'}
+    )
+
     main()
 ```
 
