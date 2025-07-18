@@ -44,7 +44,8 @@ def configure_logging(
         log_format: str,
         utc: bool,
         log_level: int = logging.INFO,
-        log_file: Optional[str] = None,
+        log_file: bool = False,
+        log_file_path: Optional[str] = None,
         console_output: bool = True,
 ) -> None:
     """
@@ -53,7 +54,8 @@ def configure_logging(
     Args:
         log_level: Logging level (default: INFO)
         log_format: Format string for log messages
-        log_file: Path to log file (if None, no file logging)
+        log_file: Whether to log to a file
+        log_file_path: Path to log file (if None, no file logging)
         console_output: Whether to output logs to console
         utc: Whether to use UTC time for log timestamps
     """
@@ -68,15 +70,15 @@ def configure_logging(
         root_logger.removeHandler(handler)
 
     # Add file handler if specified
-    if log_file is not None:
+    if log_file and log_file_path is not None:
         log_file_formatter = logging.Formatter(log_format)
 
         # Create directory if it doesn't exist
-        log_dir = os.path.dirname(log_file)
+        log_dir = os.path.dirname(log_file_path)
         if log_dir and not os.path.exists(log_dir):
             os.makedirs(log_dir)
 
-        file_handler = logging.FileHandler(log_file)
+        file_handler = logging.FileHandler(log_file_path)
 
         file_handler.setFormatter(log_file_formatter)
         root_logger.addHandler(file_handler)
@@ -107,7 +109,8 @@ def get_logger(
         extra: Optional[dict[str, Any]] = None,
         log_format: str = "%(asctime)s | %(levelname)-10s(l.%(levelno)s) | %(filename)s:%(lineno)s | %(message)s",
         log_level: int = logging.INFO,
-        log_file: str = None,
+        log_file: bool = False,
+        log_file_path: str = None,
         console_output: bool = True,
         utc: bool = False,
 ) -> CustomLoggerAdapter[Logger | LoggerAdapter[Any] | Any] | Logger:
@@ -119,7 +122,8 @@ def get_logger(
         log_level: Optional specific log level
         extra: Optional dictionary of extra context values
         log_format: Format string for log messages
-        log_file: Path to log file (if None, no file logging)
+        log_file: Whether to log to a file
+        log_file_path: Path to log file (if None, no file logging)
         console_output: Whether to output logs to console
         utc: Whether to use UTC time for log timestamps
 
@@ -128,14 +132,15 @@ def get_logger(
     """
     print_before_logger(project_name=project_name)
 
-    if not log_file:
-        log_file = f'{get_root_project_path()}/logs/{project_name}.log'
-        log_file = log_file.lower().replace(' ', '_')
+    if not log_file_path:
+        log_file_path = f'{get_root_project_path()}/logs/{project_name}.log'
+        log_file_path = log_file_path.lower().replace(' ', '_')
 
     configure_logging(
         log_level=logging.DEBUG,
         log_format=log_format,
         log_file=log_file,
+        log_file_path=log_file_path,
         console_output=console_output,
         utc=utc
     )
