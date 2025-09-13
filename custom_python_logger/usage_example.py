@@ -5,7 +5,7 @@ from custom_python_logger import build_logger, get_logger
 
 class LoggerTest:
     def __init__(self):
-        self.logger = get_logger(self.__class__.__name__)
+        self.logger = get_logger(self.__class__.__name__, extra={"class": self.__class__.__name__})
 
     def main(self):
         self.logger.debug("Hello World")

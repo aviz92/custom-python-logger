@@ -109,7 +109,7 @@ def configure_logging(
 def build_logger(
     project_name: str,
     extra: Optional[dict[str, Any]] = None,
-    log_format: str = "%(asctime)s | %(levelname)-10s(l.%(levelno)s) | %(name)s | %(filename)s:%(lineno)s | %(message)s",
+    log_format: str = "%(asctime)s | %(levelname)-9s | l.%(levelno)s | %(name)s | %(filename)s:%(lineno)s | %(message)s",
     log_level: int = logging.INFO,
     log_file: bool = False,
     log_file_path: str = None,
@@ -147,7 +147,7 @@ def build_logger(
         utc=utc,
     )
 
-    logger = logging.getLogger()
+    logger = logging.getLogger(project_name)
 
     if log_level is not None:
         logger.setLevel(log_level)
@@ -155,8 +155,8 @@ def build_logger(
     return CustomLoggerAdapter(logger, extra)
 
 
-def get_logger(name: str) -> CustomLoggerAdapter:
-    return CustomLoggerAdapter(logging.getLogger(name), {})
+def get_logger(name: str, extra: Optional[dict] = None) -> CustomLoggerAdapter:
+    return CustomLoggerAdapter(logging.getLogger(name), extra=extra)
 
 
 def json_pretty_format(
