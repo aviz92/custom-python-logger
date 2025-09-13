@@ -1,4 +1,5 @@
 import logging
+
 from custom_python_logger import get_logger
 
 
@@ -7,13 +8,13 @@ class LoggerTest:
         self.logger = logging.getLogger(self.__class__.__name__)
 
     def main(self):
-        self.logger.info('Hello World')
-        self.logger.debug('Hello World')
+        self.logger.info("Hello World")
+        self.logger.debug("Hello World")
 
 
 def main():
     logger = get_logger(
-        project_name='Logger Project Test',
+        project_name="Logger Project Test",
         log_level=logging.DEBUG,
         log_file=True,
         # extra={'user': 'test_user'}
@@ -35,5 +36,5 @@ def main():
     logger_test.main()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

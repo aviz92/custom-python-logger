@@ -3,17 +3,20 @@ import json
 import logging
 import os
 import time
-from logging import LoggerAdapter, Logger
+from logging import Logger
 from pathlib import Path
-from typing import Optional, Any
+from typing import Any, Optional, Callable
+
 import yaml
 from colorlog import ColoredFormatter
 
 
-def get_root_project_path() -> Path:
-    if 'venv' in str(Path(__file__)):
-        return Path(__file__).parents[5]
-    return Path(__file__).parent
+def get_project_path_by_file(marker: str = ".git") -> Path:
+    path = Path(__file__).resolve()
+    for parent in path.parents:
+        if (parent / marker).exists():
+            return parent
+    raise RuntimeError(f"Project root with marker '{marker}' not found.")
 
 
 def print_before_logger(project_name: str) -> None:
@@ -30,23 +33,23 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
     def exception(self, msg: str, *args, **kwargs):
         level_no = 45
         logging.addLevelName(level_no, "EXCEPTION")
-        kwargs.setdefault('stacklevel', 2)
+        kwargs.setdefault("stacklevel", 2)
         self.log(level_no, msg, *args, exc_info=True, **kwargs)
 
     def step(self, msg: str, *args, **kwargs):
         level_no = 25
         logging.addLevelName(level_no, "STEP")
-        kwargs.setdefault('stacklevel', 2)
+        kwargs.setdefault("stacklevel", 2)
         self.log(level_no, msg, *args, exc_info=False, **kwargs)
 
 
 def configure_logging(
-        log_format: str,
-        utc: bool,
-        log_level: int = logging.INFO,
-        log_file: bool = False,
-        log_file_path: Optional[str] = None,
-        console_output: bool = True,
+    log_format: str,
+    utc: bool,
+    log_level: int = logging.INFO,
+    log_file: bool = False,
+    log_file_path: Optional[str] = None,
+    console_output: bool = True,
 ) -> None:
     """
     Configure global logging settings.
@@ -87,16 +90,16 @@ def configure_logging(
     if console_output:
         # log_console_formatter = logging.Formatter('%(log_color)s ' + log_format)
         log_console_formatter = ColoredFormatter(
-            '%(log_color)s ' + log_format,
+            "%(log_color)s " + log_format,
             log_colors={
-                'DEBUG': 'white',
-                'INFO': 'green',
-                'WARNING': 'yellow',
-                'STEP': 'blue',
-                'ERROR': 'red,bold',
-                'EXCEPTION': 'light_red,bold',
-                'CRITICAL': 'red,bg_white',
-            }
+                "DEBUG": "white",
+                "INFO": "green",
+                "WARNING": "yellow",
+                "STEP": "blue",
+                "ERROR": "red,bold",
+                "EXCEPTION": "light_red,bold",
+                "CRITICAL": "red,bg_white",
+            },
         )
 
         console_handler = logging.StreamHandler()
@@ -105,15 +108,15 @@ def configure_logging(
 
 
 def get_logger(
-        project_name: str,
-        extra: Optional[dict[str, Any]] = None,
-        log_format: str = "%(asctime)s | %(levelname)-10s(l.%(levelno)s) | %(filename)s:%(lineno)s | %(message)s",
-        log_level: int = logging.INFO,
-        log_file: bool = False,
-        log_file_path: str = None,
-        console_output: bool = True,
-        utc: bool = False,
-) -> CustomLoggerAdapter[Logger | LoggerAdapter[Any] | Any] | Logger:
+    project_name: str,
+    extra: Optional[dict[str, Any]] = None,
+    log_format: str = "%(asctime)s | %(levelname)-10s(l.%(levelno)s) | %(filename)s:%(lineno)s | %(message)s",
+    log_level: int = logging.INFO,
+    log_file: bool = False,
+    log_file_path: str = None,
+    console_output: bool = True,
+    utc: bool = False,
+) -> CustomLoggerAdapter | Logger:
     """
     Get a named logger with optional extra context.
 
@@ -133,8 +136,8 @@ def get_logger(
     print_before_logger(project_name=project_name)
 
     if not log_file_path:
-        log_file_path = f'{get_root_project_path()}/logs/{project_name}.log'
-        log_file_path = log_file_path.lower().replace(' ', '_')
+        log_file_path = f"{get_project_path_by_file()}/logs/{project_name}.log"
+        log_file_path = log_file_path.lower().replace(" ", "_")
 
     configure_logging(
         log_level=logging.DEBUG,
@@ -142,7 +145,7 @@ def get_logger(
         log_file=log_file,
         log_file_path=log_file_path,
         console_output=console_output,
-        utc=utc
+        utc=utc,
     )
 
     logger = logging.getLogger()
@@ -154,18 +157,17 @@ def get_logger(
 
 
 def json_pretty_format(
-        data: any,
-        indent: int = 4,
-        sort_keys: bool = True,
-        default: callable = None
+    data: Any,
+    indent: int = 4,
+    sort_keys: bool = True,
+    default: Callable = None
 ) -> str:
     return json.dumps(data, indent=indent, sort_keys=sort_keys, default=default)
 
 
 def yaml_pretty_format(
-        data: any,
-        indent: int = 4,
-        sort_keys: bool = False,
-        allow_unicode=True
+    data: Any, indent: int = 4, sort_keys: bool = False, allow_unicode=True
 ) -> str:
-    return yaml.dump(data, sort_keys=sort_keys, indent=indent, allow_unicode=allow_unicode)
+    return yaml.dump(
+        data, sort_keys=sort_keys, indent=indent, allow_unicode=allow_unicode
+    )
