@@ -8,7 +8,7 @@ import pytest
 
 from custom_python_logger import (
     CustomLoggerAdapter,
-    get_logger,
+    build_logger,
     json_pretty_format,
     yaml_pretty_format,
 )
@@ -22,7 +22,7 @@ def temp_log_file():
 
 
 def test_logger_creation():
-    logger = get_logger(project_name="PytestTest")
+    logger = build_logger(project_name="PytestTest")
     assert logger is not None
     assert isinstance(logger, CustomLoggerAdapter)
     assert hasattr(logger, "step")
@@ -30,7 +30,7 @@ def test_logger_creation():
 
 
 def test_step_log(caplog):
-    logger = get_logger(project_name="PytestTest", console_output=False)
+    logger = build_logger(project_name="PytestTest", console_output=False)
     if not isinstance(logger, CustomLoggerAdapter):
         raise AssertionError("Logger is not a CustomLoggerAdapter")
     # Attach caplog.handler
@@ -42,7 +42,7 @@ def test_step_log(caplog):
 
 
 def test_step_log_2(caplog):
-    logger = get_logger(project_name="TestProject", console_output=False)
+    logger = build_logger(project_name="TestProject", console_output=False)
     if not isinstance(logger, CustomLoggerAdapter):
         raise AssertionError("Logger is not a CustomLoggerAdapter")
     logging.getLogger().addHandler(caplog.handler)
@@ -53,7 +53,7 @@ def test_step_log_2(caplog):
 
 
 def test_exception_log(caplog):
-    logger = get_logger(project_name="PytestTest", console_output=False)
+    logger = build_logger(project_name="PytestTest", console_output=False)
     logging.getLogger().addHandler(caplog.handler)
     with caplog.at_level(logging.ERROR):
         try:
@@ -65,7 +65,7 @@ def test_exception_log(caplog):
 
 
 def test_exception_log_2(caplog):
-    logger = get_logger(project_name="TestProject", console_output=False)
+    logger = build_logger(project_name="TestProject", console_output=False)
     logging.getLogger().addHandler(caplog.handler)
     with caplog.at_level(logging.ERROR):
         try:
@@ -77,7 +77,7 @@ def test_exception_log_2(caplog):
 
 
 def test_log_to_file(temp_log_file):
-    logger = get_logger(
+    logger = build_logger(
         project_name="FileTest", log_file=True, log_file_path=temp_log_file
     )
     logger.info("File log message")
@@ -88,7 +88,7 @@ def test_log_to_file(temp_log_file):
 
 
 def test_utc_logging(temp_log_file):
-    logger = get_logger(
+    logger = build_logger(
         project_name="UTCTest", log_file=True, log_file_path=temp_log_file, utc=True
     )
     logger.info("UTC log message")
@@ -104,7 +104,7 @@ def test_utc_logging(temp_log_file):
 
 
 def test_extra_context(caplog):
-    logger = get_logger(
+    logger = build_logger(
         project_name="ExtraTest", extra={"user": "pytest"}, console_output=False
     )
     logging.getLogger().addHandler(caplog.handler)

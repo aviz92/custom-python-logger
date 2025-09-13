@@ -2,9 +2,9 @@ import json
 import logging
 import os
 import time
-from logging import Logger
+from logging import Logger, LoggerAdapter
 from pathlib import Path
-from typing import Any, Optional, Callable
+from typing import Any, Callable, Optional
 
 import yaml
 from colorlog import ColoredFormatter
@@ -106,10 +106,10 @@ def configure_logging(
         root_logger.addHandler(console_handler)
 
 
-def get_logger(
+def build_logger(
     project_name: str,
     extra: Optional[dict[str, Any]] = None,
-    log_format: str = "%(asctime)s | %(levelname)-10s(l.%(levelno)s) | %(filename)s:%(lineno)s | %(message)s",
+    log_format: str = "%(asctime)s | %(levelname)-10s(l.%(levelno)s) | %(name)s | %(filename)s:%(lineno)s | %(message)s",
     log_level: int = logging.INFO,
     log_file: bool = False,
     log_file_path: str = None,
@@ -155,11 +155,12 @@ def get_logger(
     return CustomLoggerAdapter(logger, extra)
 
 
+def get_logger(name: str) -> CustomLoggerAdapter:
+    return CustomLoggerAdapter(logging.getLogger(name), {})
+
+
 def json_pretty_format(
-    data: Any,
-    indent: int = 4,
-    sort_keys: bool = True,
-    default: Callable = None
+    data: Any, indent: int = 4, sort_keys: bool = True, default: Callable = None
 ) -> str:
     return json.dumps(data, indent=indent, sort_keys=sort_keys, default=default)
 
