@@ -160,12 +160,9 @@ def build_logger(
         log_file_path: Path to log file (if None, no file logging)
         console_output: Whether to output logs to console
         utc: Whether to use UTC time for log timestamps
-
     Returns:
         Configured logger
     """
-    print_before_logger(project_name=project_name)
-
     if not log_file_path:
         log_file_path = f"{get_project_path_by_file()}/logs/{project_name}.log"
         log_file_path = log_file_path.lower().replace(" ", "_")
