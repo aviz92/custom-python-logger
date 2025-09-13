@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import time
-from logging import Logger, LoggerAdapter
+from logging import Logger
 from pathlib import Path
 from typing import Any, Callable, Optional
 
