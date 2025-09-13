@@ -7,9 +7,9 @@ from custom_python_logger.logger import (
 )
 
 __all__ = [
+    "CustomLoggerAdapter",
     "build_logger",
     "get_logger",
-    "CustomLoggerAdapter",
     "json_pretty_format",
     "yaml_pretty_format",
 ]
