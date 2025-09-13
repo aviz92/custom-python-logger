@@ -27,9 +27,9 @@ Here's a quick example of how to use `custom-python-logger` in your project:
 
 ```python
 import logging
-from custom_python_logger import get_logger, CustomLoggerAdapter
+from custom_python_logger import build_logger, CustomLoggerAdapter
 
-logger: CustomLoggerAdapter = get_logger(
+logger: CustomLoggerAdapter = build_logger(
     project_name='Logger Project Test',
     log_level=logging.DEBUG,
     log_file=True,
@@ -51,30 +51,44 @@ logger.critical("This is a critical message.")
 #### Advanced Usage
 - Log to a file:
   ```python
-  from custom_python_logger import get_logger, CustomLoggerAdapter
+  from custom_python_logger import build_logger
 
-  logger = get_logger(project_name='MyApp', log_file=True)
+  logger = build_logger(project_name='MyApp', log_file=True)
   ```
+
 - Use UTC timestamps:
   ```python
-  from custom_python_logger import get_logger, CustomLoggerAdapter
+  from custom_python_logger import build_logger
 
-  logger = get_logger(project_name='MyApp', log_file=True, utc=True)
+  logger = build_logger(project_name='MyApp', log_file=True, utc=True)
   ```
+
 - Add extra context:
   ```python
-  from custom_python_logger import get_logger, CustomLoggerAdapter
+  from custom_python_logger import build_logger
 
-  logger = get_logger(project_name='MyApp', log_file=True, utc=True, extra={'user': 'alice'})
+  logger = build_logger(project_name='MyApp', log_file=True, utc=True, extra={'user': 'alice'})
   ```
+
 - Pretty-print JSON or YAML:
   ```python
-  from custom_python_logger import get_logger, CustomLoggerAdapter, json_pretty_format, yaml_pretty_format
+  from custom_python_logger import build_logger, json_pretty_format, yaml_pretty_format
 
-  logger = get_logger(project_name='MyApp', utc=True, log_file=True)
+  logger = build_logger(project_name='MyApp', utc=True, log_file=True)
 
   logger.info(json_pretty_format({'foo': 'bar'}))
   logger.info(yaml_pretty_format({'foo': 'bar'}))
+  ```
+
+- use an existing logger (CustomLoggerAdapter) and set a custom name:
+  ```python
+  from custom_python_logger import get_logger
+
+  logger = get_logger('some-name')
+
+logger.debug("This is a debug message.")
+logger.info("This is an info message.")
+logger.step("This is a step message.")
   ```
 
 ---
