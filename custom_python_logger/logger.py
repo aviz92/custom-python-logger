@@ -9,6 +9,22 @@ from typing import Any, Callable, Optional
 import yaml
 from colorlog import ColoredFormatter
 
+from custom_python_logger.consts import LOG_COLORS, CustomLoggerLevel
+
+
+def json_pretty_format(
+    data: Any, indent: int = 4, sort_keys: bool = True, default: Callable = None
+) -> str:
+    return json.dumps(data, indent=indent, sort_keys=sort_keys, default=default)
+
+
+def yaml_pretty_format(
+    data: Any, indent: int = 4, sort_keys: bool = False, allow_unicode=True
+) -> str:
+    return yaml.dump(
+        data, sort_keys=sort_keys, indent=indent, allow_unicode=allow_unicode
+    )
+
 
 def get_project_path_by_file(marker: str = ".git") -> Path:
     path = Path(__file__).resolve()
@@ -30,16 +46,55 @@ def print_before_logger(project_name: str) -> None:
 
 class CustomLoggerAdapter(logging.LoggerAdapter):
     def exception(self, msg: str, *args, **kwargs):
-        level_no = 45
-        logging.addLevelName(level_no, "EXCEPTION")
+        logging.addLevelName(CustomLoggerLevel.EXCEPTION.value, "EXCEPTION")
         kwargs.setdefault("stacklevel", 2)
-        self.log(level_no, msg, *args, exc_info=True, **kwargs)
+        self.log(CustomLoggerLevel.EXCEPTION.value, msg, *args, exc_info=True, **kwargs)
 
     def step(self, msg: str, *args, **kwargs):
-        level_no = 25
-        logging.addLevelName(level_no, "STEP")
+        logging.addLevelName(CustomLoggerLevel.STEP.value, "STEP")
         kwargs.setdefault("stacklevel", 2)
-        self.log(level_no, msg, *args, exc_info=False, **kwargs)
+        self.log(CustomLoggerLevel.STEP.value, msg, *args, exc_info=False, **kwargs)
+
+
+def clear_existing_handlers(logger: Logger) -> None:
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
+
+
+def add_file_handler_if_specified(
+    logger: Logger,
+    log_file: bool,
+    log_file_path: Optional[str],
+    log_format: str,
+) -> None:
+    if log_file and log_file_path is not None:
+        log_file_formatter = logging.Formatter(log_format)
+
+        # Create directory if it doesn't exist
+        log_dir = os.path.dirname(log_file_path)
+        if log_dir and not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+
+        file_handler = logging.FileHandler(log_file_path)
+
+        file_handler.setFormatter(log_file_formatter)
+        logger.addHandler(file_handler)
+
+
+def add_console_handler_if_specified(
+    logger: Logger,
+    console_output: bool,
+    log_format: str
+):
+    if console_output:
+        log_console_formatter = ColoredFormatter(
+            "%(log_color)s " + log_format,
+            log_colors=LOG_COLORS,
+        )
+
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(log_console_formatter)
+        logger.addHandler(console_handler)
 
 
 def configure_logging(
@@ -67,43 +122,20 @@ def configure_logging(
     root_logger = logging.getLogger()
     root_logger.setLevel(log_level)
 
-    # Clear existing handlers
-    for handler in root_logger.handlers[:]:
-        root_logger.removeHandler(handler)
+    clear_existing_handlers(logger=root_logger)
 
-    # Add file handler if specified
-    if log_file and log_file_path is not None:
-        log_file_formatter = logging.Formatter(log_format)
+    add_file_handler_if_specified(
+        logger=root_logger,
+        log_file=log_file,
+        log_file_path=log_file_path,
+        log_format=log_format,
+    )
 
-        # Create directory if it doesn't exist
-        log_dir = os.path.dirname(log_file_path)
-        if log_dir and not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-
-        file_handler = logging.FileHandler(log_file_path)
-
-        file_handler.setFormatter(log_file_formatter)
-        root_logger.addHandler(file_handler)
-
-    # Add console handler if specified
-    if console_output:
-        # log_console_formatter = logging.Formatter('%(log_color)s ' + log_format)
-        log_console_formatter = ColoredFormatter(
-            "%(log_color)s " + log_format,
-            log_colors={
-                "DEBUG": "white",
-                "INFO": "green",
-                "WARNING": "yellow",
-                "STEP": "blue",
-                "ERROR": "red,bold",
-                "EXCEPTION": "light_red,bold",
-                "CRITICAL": "red,bg_white",
-            },
-        )
-
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(log_console_formatter)
-        root_logger.addHandler(console_handler)
+    add_console_handler_if_specified(
+        logger=root_logger,
+        console_output=console_output,
+        log_format=log_format,
+    )
 
 
 def build_logger(
@@ -157,17 +189,3 @@ def build_logger(
 
 def get_logger(name: str, extra: Optional[dict] = None) -> CustomLoggerAdapter:
     return CustomLoggerAdapter(logging.getLogger(name), extra=extra)
-
-
-def json_pretty_format(
-    data: Any, indent: int = 4, sort_keys: bool = True, default: Callable = None
-) -> str:
-    return json.dumps(data, indent=indent, sort_keys=sort_keys, default=default)
-
-
-def yaml_pretty_format(
-    data: Any, indent: int = 4, sort_keys: bool = False, allow_unicode=True
-) -> str:
-    return yaml.dump(
-        data, sort_keys=sort_keys, indent=indent, allow_unicode=allow_unicode
-    )
