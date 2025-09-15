@@ -26,12 +26,15 @@ def yaml_pretty_format(
     )
 
 
-def get_project_path_by_file(marker: str = ".git") -> Path:
+def get_project_path_by_file(markers: Optional[list[str]] = None) -> Path:
+    if not markers:
+        markers = ["pyproject.toml", "setup.py", ".git", "requirements.txt", ".gitignore", ".github", ".gitlab"]
     path = Path(__file__).resolve()
     for parent in path.parents:
-        if (parent / marker).exists():
-            return parent
-    raise RuntimeError(f"Project root with marker '{marker}' not found.")
+        for marker in markers:
+            if (parent / marker).exists():
+                return parent
+    raise RuntimeError(f'Project root with one of the markers: "{markers}" not found.')
 
 
 def print_before_logger(project_name: str) -> None:
