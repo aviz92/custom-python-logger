@@ -29,7 +29,12 @@ def yaml_pretty_format(
 def get_project_path_by_file(markers: Optional[list[str]] = None) -> Path:
     if not markers:
         markers = ["pyproject.toml", "setup.py", ".git", "requirements.txt", ".gitignore", ".github", ".gitlab"]
-    path = Path(__file__).resolve()
+    path = Path(__file__).resolve() if "__file__" in globals() else Path.cwd().resolve()
+
+    for marker in markers:
+        if (path / marker).exists():
+            return path
+
     for parent in path.parents:
         for marker in markers:
             if (parent / marker).exists():
