@@ -43,17 +43,6 @@ repos: # Black → isort → Ruff (fix=false) → Pylint
         ]
         language_version: python3
 
-#    # ### isort ###
-#  - repo: https://github.com/pycqa/isort  # not needed if using ruff fix=true
-#    rev: 6.0.1
-#    hooks:
-#      - id: isort
-#        name: Isort (Sort imports alphabetically)
-#        args: [
-#          "--settings-path=.config/isort.cfg"
-#        ]
-#        types: [ python ]
-
     # ### ruff ###
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.7
