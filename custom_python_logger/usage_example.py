@@ -4,16 +4,16 @@ from custom_python_logger import build_logger, get_logger
 
 
 class LoggerTest:
-    def __init__(self):
+    def __init__(self) -> None:
         self.logger = get_logger(self.__class__.__name__, extra={"class": self.__class__.__name__})
 
-    def main(self):
+    def main(self) -> None:
         self.logger.debug("Hello World")
         self.logger.info("Hello World")
         self.logger.step("Hello World")
 
 
-def main():
+def main() -> None:
     logger = build_logger(
         project_name="Logger Project Test",
         log_level=logging.DEBUG,

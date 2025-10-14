@@ -1,6 +1,8 @@
 setuptools
 wheel
 colorlog
+python-dotenv
+pre-commit
 pytest
 pathlib
 PyYAML

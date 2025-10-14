@@ -1,17 +1,12 @@
+import datetime
 import logging
 import os
 import tempfile
 import time
-from datetime import timezone
 
 import pytest
 
-from custom_python_logger import (
-    CustomLoggerAdapter,
-    build_logger,
-    json_pretty_format,
-    yaml_pretty_format,
-)
+from custom_python_logger import CustomLoggerAdapter, build_logger, json_pretty_format, yaml_pretty_format
 
 
 @pytest.fixture
@@ -76,10 +71,8 @@ def test_exception_log_2(caplog):
     assert any("EXCEPTION" in r.levelname for r in caplog.records)
 
 
-def test_log_to_file(temp_log_file):
-    logger = build_logger(
-        project_name="FileTest", log_file=True, log_file_path=temp_log_file
-    )
+def test_log_to_file(temp_log_file):  # pylint: disable=W0621
+    logger = build_logger(project_name="FileTest", log_file=True, log_file_path=temp_log_file)
     logger.info("File log message")
     time.sleep(0.1)
     with open(temp_log_file) as f:
@@ -87,26 +80,20 @@ def test_log_to_file(temp_log_file):
     assert "File log message" in content
 
 
-def test_utc_logging(temp_log_file):
-    logger = build_logger(
-        project_name="UTCTest", log_file=True, log_file_path=temp_log_file, utc=True
-    )
+def test_utc_logging(temp_log_file):  # pylint: disable=W0621
+    logger = build_logger(project_name="UTCTest", log_file=True, log_file_path=temp_log_file, utc=True)
     logger.info("UTC log message")
     time.sleep(0.1)
     with open(temp_log_file) as f:
         content = f.read()
     assert "UTC log message" in content
     # Check for a year in UTC (should be close to now)
-    import datetime
-
-    now_utc = datetime.datetime.now(tz=timezone.utc).strftime("%Y")
+    now_utc = datetime.datetime.now(tz=datetime.UTC).strftime("%Y")
     assert now_utc in content
 
 
 def test_extra_context(caplog):
-    logger = build_logger(
-        project_name="ExtraTest", extra={"user": "pytest"}, console_output=False
-    )
+    logger = build_logger(project_name="ExtraTest", extra={"user": "pytest"}, console_output=False)
     logging.getLogger().addHandler(caplog.handler)
     with caplog.at_level(logging.INFO):
         logger.info("With extra")

@@ -2,9 +2,10 @@ import json
 import logging
 import os
 import time
+from collections.abc import Callable
 from logging import Logger
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any
 
 import yaml
 from colorlog import ColoredFormatter
@@ -12,21 +13,15 @@ from colorlog import ColoredFormatter
 from custom_python_logger.consts import LOG_COLORS, CustomLoggerLevel
 
 
-def json_pretty_format(
-    data: Any, indent: int = 4, sort_keys: bool = True, default: Callable = None
-) -> str:
+def json_pretty_format(data: Any, indent: int = 4, sort_keys: bool = True, default: Callable = None) -> str:
     return json.dumps(data, indent=indent, sort_keys=sort_keys, default=default)
 
 
-def yaml_pretty_format(
-    data: Any, indent: int = 4, sort_keys: bool = False, allow_unicode=True
-) -> str:
-    return yaml.dump(
-        data, sort_keys=sort_keys, indent=indent, allow_unicode=allow_unicode
-    )
+def yaml_pretty_format(data: Any, indent: int = 4, sort_keys: bool = False, allow_unicode: bool = True) -> str:
+    return yaml.dump(data, sort_keys=sort_keys, indent=indent, allow_unicode=allow_unicode)
 
 
-def get_project_path_by_file(markers: Optional[list[str]] = None) -> Path:
+def get_project_path_by_file(markers: list[str] | None = None) -> Path:
     if not markers:
         markers = ["pyproject.toml", "setup.py", ".git", "requirements.txt", ".gitignore", ".github", ".gitlab"]
     path = Path(__file__).resolve() if "__file__" in globals() else Path.cwd().resolve()
@@ -53,12 +48,12 @@ def print_before_logger(project_name: str) -> None:
 
 
 class CustomLoggerAdapter(logging.LoggerAdapter):
-    def exception(self, msg: str, *args, **kwargs):
+    def exception(self, msg: str, *args: Any, **kwargs: Any) -> None:
         logging.addLevelName(CustomLoggerLevel.EXCEPTION.value, "EXCEPTION")
         kwargs.setdefault("stacklevel", 2)
         self.log(CustomLoggerLevel.EXCEPTION.value, msg, *args, exc_info=True, **kwargs)
 
-    def step(self, msg: str, *args, **kwargs):
+    def step(self, msg: str, *args: Any, **kwargs: Any) -> None:
         logging.addLevelName(CustomLoggerLevel.STEP.value, "STEP")
         kwargs.setdefault("stacklevel", 2)
         self.log(CustomLoggerLevel.STEP.value, msg, *args, exc_info=False, **kwargs)
@@ -72,7 +67,7 @@ def clear_existing_handlers(logger: Logger) -> None:
 def add_file_handler_if_specified(
     logger: Logger,
     log_file: bool,
-    log_file_path: Optional[str],
+    log_file_path: str | None,
     log_format: str,
 ) -> None:
     if log_file and log_file_path is not None:
@@ -89,11 +84,7 @@ def add_file_handler_if_specified(
         logger.addHandler(file_handler)
 
 
-def add_console_handler_if_specified(
-    logger: Logger,
-    console_output: bool,
-    log_format: str
-):
+def add_console_handler_if_specified(logger: Logger, console_output: bool, log_format: str) -> None:
     if console_output:
         log_console_formatter = ColoredFormatter(
             "%(log_color)s " + log_format,
@@ -110,7 +101,7 @@ def configure_logging(
     utc: bool,
     log_level: int = logging.INFO,
     log_file: bool = False,
-    log_file_path: Optional[str] = None,
+    log_file_path: str | None = None,
     console_output: bool = True,
 ) -> None:
     """
@@ -148,8 +139,8 @@ def configure_logging(
 
 def build_logger(
     project_name: str,
-    extra: Optional[dict[str, Any]] = None,
-    log_format: str = "%(asctime)s | %(levelname)-9s | l.%(levelno)s | %(name)s | %(filename)s:%(lineno)s | %(message)s",
+    extra: dict[str, Any] | None = None,
+    log_format: str = "%(asctime)s | %(levelname)-9s | l.%(levelno)s | %(name)s | %(filename)s:%(lineno)s | %(message)s",  # pylint: disable=C0301
     log_level: int = logging.INFO,
     log_file: bool = False,
     log_file_path: str = None,
@@ -192,5 +183,5 @@ def build_logger(
     return CustomLoggerAdapter(logger, extra)
 
 
-def get_logger(name: str, extra: Optional[dict] = None) -> CustomLoggerAdapter:
+def get_logger(name: str, extra: dict | None = None) -> CustomLoggerAdapter:
     return CustomLoggerAdapter(logging.getLogger(name), extra=extra)
