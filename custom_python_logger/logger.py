@@ -12,6 +12,8 @@ from colorlog import ColoredFormatter
 
 from custom_python_logger.consts import LOG_COLORS, CustomLoggerLevel
 
+CHILD_LOGGER = "child_logger"
+
 
 def json_pretty_format(data: Any, indent: int = 4, sort_keys: bool = True, default: Callable = None) -> str:
     return json.dumps(data, indent=indent, sort_keys=sort_keys, default=default)
@@ -99,7 +101,6 @@ def add_console_handler_if_specified(logger: Logger, console_output: bool, log_f
 def configure_logging(
     log_format: str,
     utc: bool,
-    log_level: int = logging.INFO,
     log_file: bool = False,
     log_file_path: str | None = None,
     console_output: bool = True,
@@ -108,18 +109,16 @@ def configure_logging(
     Configure global logging settings.
 
     Args:
-        log_level: Logging level (default: INFO)
         log_format: Format string for log messages
+        utc: Whether to use UTC time for log timestamps
         log_file: Whether to log to a file
         log_file_path: Path to log file (if None, no file logging)
         console_output: Whether to output logs to console
-        utc: Whether to use UTC time for log timestamps
     """
     if utc:
         logging.Formatter.converter = time.gmtime
 
     root_logger = logging.getLogger()
-    root_logger.setLevel(log_level)
 
     clear_existing_handlers(logger=root_logger)
 
@@ -141,7 +140,7 @@ def build_logger(
     project_name: str,
     extra: dict[str, Any] | None = None,
     log_format: str = "%(asctime)s | %(levelname)-9s | l.%(levelno)s | %(name)s | %(filename)s:%(lineno)s | %(message)s",  # pylint: disable=C0301
-    log_level: int = logging.INFO,
+    log_level: int = logging.DEBUG,
     log_file: bool = False,
     log_file_path: str = None,
     console_output: bool = True,
@@ -167,21 +166,24 @@ def build_logger(
         log_file_path = log_file_path.lower().replace(" ", "_")
 
     configure_logging(
-        log_level=logging.DEBUG,
         log_format=log_format,
         log_file=log_file,
         log_file_path=log_file_path,
         console_output=console_output,
         utc=utc,
     )
+    logger = CustomLoggerAdapter(logging.getLogger(CHILD_LOGGER), extra)
+    logger.setLevel(log_level)
 
-    logger = logging.getLogger(project_name)
-
-    if log_level is not None:
-        logger.setLevel(log_level)
-
-    return CustomLoggerAdapter(logger, extra)
+    return logger
 
 
-def get_logger(name: str, extra: dict | None = None) -> CustomLoggerAdapter:
-    return CustomLoggerAdapter(logging.getLogger(name), extra=extra)
+def get_logger(name: str, log_level: int | None = None, extra: dict | None = None) -> CustomLoggerAdapter:
+    child_logger = logging.getLogger(CHILD_LOGGER)
+    new_logger = CustomLoggerAdapter(logging.getLogger(name), extra=extra)
+
+    if not log_level:
+        log_level = child_logger.level
+    new_logger.setLevel(log_level)
+
+    return new_logger
