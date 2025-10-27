@@ -1,4 +1,4 @@
-from custom_python_logger.usage_example import main
+from usage_example.example_1 import main
 
 
 def test_usage_example_runs(monkeypatch):

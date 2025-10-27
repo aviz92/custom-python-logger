@@ -136,6 +136,17 @@ def configure_logging(
     )
 
 
+def get_logger(name: str, log_level: int | None = None, extra: dict | None = None) -> CustomLoggerAdapter:
+    child_logger = logging.getLogger(CHILD_LOGGER)
+    new_logger = CustomLoggerAdapter(logging.getLogger(name), extra=extra)
+
+    if not log_level:
+        log_level = child_logger.level
+    new_logger.setLevel(log_level)
+
+    return new_logger
+
+
 def build_logger(
     project_name: str,
     extra: dict[str, Any] | None = None,
@@ -175,15 +186,4 @@ def build_logger(
     logger = CustomLoggerAdapter(logging.getLogger(CHILD_LOGGER), extra)
     logger.setLevel(log_level)
 
-    return logger
-
-
-def get_logger(name: str, log_level: int | None = None, extra: dict | None = None) -> CustomLoggerAdapter:
-    child_logger = logging.getLogger(CHILD_LOGGER)
-    new_logger = CustomLoggerAdapter(logging.getLogger(name), extra=extra)
-
-    if not log_level:
-        log_level = child_logger.level
-    new_logger.setLevel(log_level)
-
-    return new_logger
+    return get_logger(project_name)
