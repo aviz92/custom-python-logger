@@ -8,9 +8,15 @@ LOG_COLORS = {
     "ERROR": "red,bold",
     "EXCEPTION": "light_red,bold",
     "CRITICAL": "red,bg_white",
+    "SUCCESS": "bold_green",
+    "ALERT": "bold_yellow",
+    "TRACE": "bold_cyan",
 }
 
 
 class CustomLoggerLevel(Enum):
     EXCEPTION = 45
     STEP = 25
+    SUCCESS = 26
+    ALERT = 35
+    TRACE = 15

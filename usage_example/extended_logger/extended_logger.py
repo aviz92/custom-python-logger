@@ -7,29 +7,22 @@ import logging
 
 LOG_COLORS.update(
     {
-        'SUCCESS': 'bold_green',
-        'ALERT': 'bold_yellow',
-        'TRACE': 'bold_cyan',
+        "XXX": "bold_cyan",
+        "YYY": "bold_blue",
     }
 )
 
 
 class ExtendedLoggerAdapter(CustomLoggerAdapter):
-    def success(self, msg: str, *args, **kwargs) -> None:
-        logger_level = 26
-        logging.addLevelName(logger_level, "SUCCESS")
+    def xxx(self, msg: str, *args, **kwargs) -> None:
+        logger_level = 27
+        logging.addLevelName(logger_level, "XXX")
         kwargs.setdefault("stacklevel", 2)
         self.log(logger_level, msg, *args, **kwargs)
 
-    def alert(self, msg: str, *args, **kwargs) -> None:
-        logger_level = 35
-        logging.addLevelName(logger_level, "ALERT")
-        kwargs.setdefault("stacklevel", 2)
-        self.log(logger_level, msg, *args, **kwargs)
-
-    def trace(self, msg: str, *args, **kwargs) -> None:
-        logger_level = 15
-        logging.addLevelName(logger_level, "TRACE")
+    def yyy(self, msg: str, *args, **kwargs) -> None:
+        logger_level = 12
+        logging.addLevelName(logger_level, "YYY")
         kwargs.setdefault("stacklevel", 2)
         self.log(logger_level, msg, *args, **kwargs)
 

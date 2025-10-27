@@ -60,6 +60,21 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
         kwargs.setdefault("stacklevel", 2)
         self.log(CustomLoggerLevel.STEP.value, msg, *args, exc_info=False, **kwargs)
 
+    def success(self, msg: str, *args, **kwargs) -> None:
+        logging.addLevelName(CustomLoggerLevel.SUCCESS.value, "SUCCESS")
+        kwargs.setdefault("stacklevel", 2)
+        self.log(CustomLoggerLevel.SUCCESS.value, msg, *args, **kwargs)
+
+    def alert(self, msg: str, *args, **kwargs) -> None:
+        logging.addLevelName(CustomLoggerLevel.ALERT.value, "ALERT")
+        kwargs.setdefault("stacklevel", 2)
+        self.log(CustomLoggerLevel.ALERT.value, msg, *args, **kwargs)
+
+    def trace(self, msg: str, *args, **kwargs) -> None:
+        logging.addLevelName(CustomLoggerLevel.TRACE.value, "TRACE")
+        kwargs.setdefault("stacklevel", 2)
+        self.log(CustomLoggerLevel.TRACE.value, msg, *args, **kwargs)
+
 
 def clear_existing_handlers(logger: Logger) -> None:
     for handler in logger.handlers[:]:

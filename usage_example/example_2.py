@@ -7,9 +7,8 @@ x = build_extended_logger(
     log_level=logging.DEBUG,
 )
 
-x.success("success")
-x.alert("alert")
-x.trace("trace")
+x.xxx("x1")
+x.yyy("x2")
 x.debug("debug")
 x.info("info")
 x.warning("warning")
