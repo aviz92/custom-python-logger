@@ -7,7 +7,7 @@ import logging
 
 LOG_COLORS.update(
     {
-        "XXX": "bold_cyan",
+        "XXX": "red",
         "YYY": "bold_blue",
     }
 )

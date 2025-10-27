@@ -9,6 +9,7 @@ LOG_COLORS = {
     "EXCEPTION": "light_red,bold",
     "CRITICAL": "red,bg_white",
     "SUCCESS": "bold_green",
+    "FATAL": "red,bg_white",
     "ALERT": "bold_yellow",
     "TRACE": "bold_cyan",
 }
