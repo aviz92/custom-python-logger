@@ -1,5 +1,6 @@
 from custom_python_logger.logger import (
     CustomLoggerAdapter,
+    CustomLoggerLevel,
     build_logger,
     get_logger,
     json_pretty_format,
@@ -8,6 +9,7 @@ from custom_python_logger.logger import (
 
 __all__ = [
     "CustomLoggerAdapter",
+    "CustomLoggerLevel",
     "build_logger",
     "get_logger",
     "json_pretty_format",
