@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_version = "2.0.5"
+package_version = "2.0.6"
 
 package_name = "custom-python-logger"
 package_description = "A custom logger with color support and additional features."
