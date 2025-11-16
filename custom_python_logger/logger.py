@@ -12,7 +12,7 @@ from colorlog import ColoredFormatter
 
 from custom_python_logger.consts import LOG_COLORS, CustomLoggerLevel
 
-CHILD_LOGGER = "child_logger"
+CUSTOM_LOGGER = "custom_logger"
 
 
 def json_pretty_format(data: Any, indent: int = 4, sort_keys: bool = True, default: Callable = None) -> str:
@@ -152,11 +152,12 @@ def configure_logging(
 
 
 def get_logger(name: str, log_level: int | None = None, extra: dict | None = None) -> CustomLoggerAdapter:
-    child_logger = logging.getLogger(CHILD_LOGGER)
-    new_logger = CustomLoggerAdapter(logging.getLogger(name), extra=extra)
+    custom_logger = logging.getLogger(CUSTOM_LOGGER)
+    full_name = f"{CUSTOM_LOGGER}.{name}"
+    new_logger = CustomLoggerAdapter(logging.getLogger(full_name), extra=extra)
 
     if not log_level:
-        log_level = child_logger.level
+        log_level = custom_logger.level
     new_logger.setLevel(log_level)
 
     return new_logger
@@ -198,7 +199,7 @@ def build_logger(
         console_output=console_output,
         utc=utc,
     )
-    logger = CustomLoggerAdapter(logging.getLogger(CHILD_LOGGER), extra)
+    logger = CustomLoggerAdapter(logging.getLogger(CUSTOM_LOGGER), extra)
     logger.setLevel(log_level)
 
     return get_logger(project_name)
