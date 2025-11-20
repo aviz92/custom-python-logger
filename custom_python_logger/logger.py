@@ -156,7 +156,7 @@ def get_logger(name: str, log_level: int | None = None, extra: dict | None = Non
     full_name = f"{CUSTOM_LOGGER}.{name}"
     new_logger = CustomLoggerAdapter(logging.getLogger(full_name), extra=extra)
 
-    if log_level is not None:
+    if log_level is None:
         log_level = custom_logger.level
     new_logger.setLevel(log_level)
 
