@@ -1,3 +1,44 @@
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "custom-python-logger"
+version = "2.0.10"
+description = "A custom logger with color support and additional features."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Avi Zaguri" },
+]
+keywords = ["logging", "logger", "color", "debug", "development"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Topic :: System :: Logging",
+]
+
+dependencies = [
+    "colorlog>=6.10.1",
+    "pathlib>=1.0.1",
+    "pre-commit>=4.5.0",
+    "pytest>=9.0.1",
+    "python-dotenv>=1.2.1",
+    "pyyaml>=6.0.3",
+    "setuptools>=80.9.0",
+    "wheel>=0.45.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/aviz92/custom-python-logger"
+Repository = "https://github.com/aviz92/custom-python-logger"
+Issues = "https://github.com/aviz92/custom-python-logger/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["custom_python_logger*"]
+namespaces = false
