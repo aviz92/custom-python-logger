@@ -23,9 +23,8 @@ def yaml_pretty_format(data: Any, indent: int = 4, sort_keys: bool = False, allo
     return yaml.dump(data, sort_keys=sort_keys, indent=indent, allow_unicode=allow_unicode)
 
 
-def get_project_path_by_file(markers: list[str] | None = None) -> Path:
-    if not markers:
-        markers = ["pyproject.toml", "setup.py", ".git", "requirements.txt", ".gitignore", ".github", ".gitlab"]
+def get_project_path_by_file(markers: set[str] | None = None) -> Path:
+    markers = markers or {".git", "setup.py", "pyproject.toml", "LICENSE", "README.md"}
     path = Path(__file__).resolve() if "__file__" in globals() else Path.cwd().resolve()
 
     for marker in markers:
