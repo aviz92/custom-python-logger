@@ -1,3 +1,12 @@
+![PyPI version](https://img.shields.io/pypi/v/custom-python-logger)
+![Python](https://img.shields.io/badge/python->=3.12-blue)
+![Development Status](https://img.shields.io/badge/status-stable-green)
+![Maintenance](https://img.shields.io/maintenance/yes/2026)
+![PyPI](https://img.shields.io/pypi/dm/custom-python-logger)
+![License](https://img.shields.io/pypi/l/custom-python-logger)
+
+---
+
 # custom-python-logger
 A powerful and flexible Python logger with colored output, custom log levels, and advanced configuration options. <br>
 Easily integrate structured, readable, and context-rich logging into your Python projects for better debugging and monitoring.
