@@ -92,7 +92,10 @@ def add_file_handler_if_specified(
         # Create directory if it doesn't exist
         log_dir = os.path.dirname(log_file_path)
         if log_dir and not os.path.exists(log_dir):
-            os.makedirs(log_dir)
+            try:
+                os.makedirs(log_dir)
+            except FileExistsError:
+                pass  # Directory was created by another process            
 
         file_handler = logging.FileHandler(log_file_path)
 
