@@ -7,7 +7,7 @@ class TestLogger(unittest.TestCase):
     def test_logger_creation(self) -> None:
         logger = build_logger(project_name="TestProject")
         self.assertIsNotNone(logger)
-        self.assertEqual(logger.name, "root")
+        self.assertEqual(logger.name, "custom_logger.TestProject")
 
     def test_step_log(self) -> None:
         logger = build_logger(project_name="TestProject")
