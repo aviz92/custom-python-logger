@@ -88,9 +88,8 @@ def add_file_handler_if_specified(
     if log_file_path is not None:
         log_file_formatter = logging.Formatter(log_format)
 
-        log_dir = os.path.dirname(log_file_path)
-        if log_dir and not os.path.exists(log_dir):
-            os.makedirs(log_dir)
+        if log_dir := os.path.dirname(log_file_path):
+            os.makedirs(log_dir, exist_ok=True)
 
         file_handler = logging.FileHandler(log_file_path)
 
