@@ -1,9 +1,8 @@
+import logging
 from typing import Any
 
 from custom_python_logger import CustomLoggerAdapter, build_logger
 from custom_python_logger.consts import LOG_COLORS
-
-import logging
 
 LOG_COLORS.update(
     {
@@ -14,26 +13,26 @@ LOG_COLORS.update(
 
 
 class ExtendedLoggerAdapter(CustomLoggerAdapter):
-    def xxx(self, msg: str, *args, **kwargs) -> None:
+    def xxx(self, msg: str, *args: Any, **kwargs: Any) -> None:
         logger_level = 27
         logging.addLevelName(logger_level, "XXX")
         kwargs.setdefault("stacklevel", 2)
         self.log(logger_level, msg, *args, **kwargs)
 
-    def yyy(self, msg: str, *args, **kwargs) -> None:
+    def yyy(self, msg: str, *args: Any, **kwargs: Any) -> None:
         logger_level = 12
         logging.addLevelName(logger_level, "YYY")
         kwargs.setdefault("stacklevel", 2)
         self.log(logger_level, msg, *args, **kwargs)
 
 
-def build_extended_logger(
+def build_extended_logger(  # pylint: disable=R0913
     project_name: str,
     extra: dict[str, Any] | None = None,
     log_format: str = "%(asctime)s | %(levelname)-9s | l.%(levelno)s | %(name)s | %(filename)s:%(lineno)s | %(message)s",  # pylint: disable=C0301
     log_level: int = logging.INFO,
     log_file: bool = False,
-    log_file_path: str = None,
+    log_file_path: str | None = None,
     console_output: bool = True,
     utc: bool = False,
 ) -> ExtendedLoggerAdapter:

@@ -3,6 +3,7 @@ import logging
 import os
 import tempfile
 import time
+from collections.abc import Generator
 
 import pytest
 
@@ -10,13 +11,13 @@ from custom_python_logger import CustomLoggerAdapter, build_logger, json_pretty_
 
 
 @pytest.fixture
-def temp_log_file():
+def temp_log_file() -> Generator[str, None, None]:
     with tempfile.NamedTemporaryFile(delete=False) as f:
         yield f.name
     os.remove(f.name)
 
 
-def test_logger_creation():
+def test_logger_creation() -> None:
     logger = build_logger(project_name="PytestTest")
     assert logger is not None
     assert isinstance(logger, CustomLoggerAdapter)
@@ -24,7 +25,7 @@ def test_logger_creation():
     assert hasattr(logger, "exception")
 
 
-def test_step_log(caplog):
+def test_step_log(caplog: pytest.LogCaptureFixture) -> None:
     logger = build_logger(project_name="PytestTest", console_output=False)
     if not isinstance(logger, CustomLoggerAdapter):
         raise AssertionError("Logger is not a CustomLoggerAdapter")
@@ -36,7 +37,7 @@ def test_step_log(caplog):
     assert any("STEP" in r.levelname for r in caplog.records)
 
 
-def test_step_log_2(caplog):
+def test_step_log_2(caplog: pytest.LogCaptureFixture) -> None:
     logger = build_logger(project_name="TestProject", console_output=False)
     if not isinstance(logger, CustomLoggerAdapter):
         raise AssertionError("Logger is not a CustomLoggerAdapter")
@@ -47,7 +48,7 @@ def test_step_log_2(caplog):
     assert any("STEP" in r.levelname for r in caplog.records)
 
 
-def test_exception_log(caplog):
+def test_exception_log(caplog: pytest.LogCaptureFixture) -> None:
     logger = build_logger(project_name="PytestTest", console_output=False)
     logging.getLogger().addHandler(caplog.handler)
     with caplog.at_level(logging.ERROR):
@@ -59,7 +60,7 @@ def test_exception_log(caplog):
     assert any("EXCEPTION" in r.levelname for r in caplog.records)
 
 
-def test_exception_log_2(caplog):
+def test_exception_log_2(caplog: pytest.LogCaptureFixture) -> None:
     logger = build_logger(project_name="TestProject", console_output=False)
     logging.getLogger().addHandler(caplog.handler)
     with caplog.at_level(logging.ERROR):
@@ -71,7 +72,7 @@ def test_exception_log_2(caplog):
     assert any("EXCEPTION" in r.levelname for r in caplog.records)
 
 
-def test_log_to_file(temp_log_file):  # pylint: disable=W0621
+def test_log_to_file(temp_log_file: str) -> None:  # pylint: disable=W0621
     logger = build_logger(project_name="FileTest", log_file=True, log_file_path=temp_log_file)
     logger.info("File log message")
     time.sleep(0.1)
@@ -80,7 +81,7 @@ def test_log_to_file(temp_log_file):  # pylint: disable=W0621
     assert "File log message" in content
 
 
-def test_utc_logging(temp_log_file):  # pylint: disable=W0621
+def test_utc_logging(temp_log_file: str) -> None:  # pylint: disable=W0621
     logger = build_logger(project_name="UTCTest", log_file=True, log_file_path=temp_log_file, utc=True)
     logger.info("UTC log message")
     time.sleep(0.1)
@@ -92,7 +93,7 @@ def test_utc_logging(temp_log_file):  # pylint: disable=W0621
     assert now_utc in content
 
 
-def test_extra_context(caplog):
+def test_extra_context(caplog: pytest.LogCaptureFixture) -> None:
     logger = build_logger(project_name="ExtraTest", extra={"user": "pytest"}, console_output=False)
     logging.getLogger().addHandler(caplog.handler)
     with caplog.at_level(logging.INFO):
@@ -101,13 +102,13 @@ def test_extra_context(caplog):
     # The extra field is not in the default format, but test that logger works with extra
 
 
-def test_json_pretty_format():
+def test_json_pretty_format() -> None:
     data = {"a": 1, "b": 2}
     result = json_pretty_format(data)
     assert "{" in result and "a" in result and "b" in result
 
 
-def test_yaml_pretty_format():
+def test_yaml_pretty_format() -> None:
     data = {"a": 1, "b": 2}
     result = yaml_pretty_format(data)
     assert "a:" in result and "b:" in result
