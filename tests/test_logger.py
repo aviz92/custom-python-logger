@@ -4,17 +4,17 @@ from custom_python_logger import build_logger
 
 
 class TestLogger(unittest.TestCase):
-    def test_logger_creation(self):
+    def test_logger_creation(self) -> None:
         logger = build_logger(project_name="TestProject")
         self.assertIsNotNone(logger)
         self.assertEqual(logger.name, "root")
 
-    def test_step_log(self):
+    def test_step_log(self) -> None:
         logger = build_logger(project_name="TestProject")
         logger.step("Testing step log")
         self.assertTrue(True)  # pylint: disable=W1503
 
-    def test_exception_log(self):
+    def test_exception_log(self) -> None:
         logger = build_logger(project_name="TestProject")
         try:
             raise ValueError("Test exception")

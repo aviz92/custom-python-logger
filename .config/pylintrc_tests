@@ -27,3 +27,7 @@ disable =
     C2701,      # import-private-name ; Imported private module
     R6301,      # Method could be a function (no-self-use)
     C0321,      # More than one statement on a single line (multiple-statements)
+
+    # tests/ only
+    W0613,      # unused-argument
+    W0611,      # unused-import
