@@ -92,7 +92,6 @@ def add_file_handler_if_specified(
             os.makedirs(log_dir, exist_ok=True)
 
         file_handler = logging.FileHandler(log_file_path)
-
         file_handler.setFormatter(log_file_formatter)
         logger.addHandler(file_handler)
 
