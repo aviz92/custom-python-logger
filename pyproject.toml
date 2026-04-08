@@ -24,11 +24,14 @@ classifiers = [
 
 dependencies = [
     "colorlog>=6.10.1",
-    "pathlib>=1.0.1",
+    "pyyaml>=6.0.3",
+]
+
+[dependency-groups]
+dev = [
     "pre-commit>=4.5.0",
     "pytest>=9.0.1",
     "python-dotenv>=1.2.1",
-    "pyyaml>=6.0.3",
     "setuptools>=80.9.0",
     "wheel>=0.45.1",
 ]
