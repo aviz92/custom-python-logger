@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "custom-python-logger"
-version = "3.0.0"
+version = "3.0.1"
 description = "A custom logger with color support and additional features."
 readme = "README.md"
 requires-python = ">=3.12"
