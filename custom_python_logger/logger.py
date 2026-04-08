@@ -148,20 +148,13 @@ def build_logger(  # pylint: disable=R0913
     clear_existing_handlers(logger=root_logger)
 
     if console_output:
-        add_console_handler(
-            logger=root_logger,
-            log_format=log_format,
-        )
+        add_console_handler(logger=root_logger, log_format=log_format)
 
     if log_file:
         if not log_file_path:
             log_file_path = f"{get_project_path_by_file()}/logs/{project_name}.log"
             log_file_path = log_file_path.lower().replace(" ", "_")
-        add_file_handler(
-            logger=root_logger,
-            log_file_path=log_file_path,
-            log_format=log_format,
-        )
+        add_file_handler(logger=root_logger, log_file_path=log_file_path, log_format=log_format)
 
     logger = CustomLoggerAdapter(logging.getLogger(CUSTOM_LOGGER), extra)
     logger.setLevel(log_level)
