@@ -80,11 +80,7 @@ def clear_existing_handlers(logger: Logger) -> None:
         logger.removeHandler(handler)
 
 
-def add_file_handler_if_specified(
-    logger: Logger,
-    log_file_path: str | None,
-    log_format: str,
-) -> None:
+def add_file_handler(logger: Logger, log_file_path: str | None, log_format: str) -> None:
     if log_file_path is not None:
         log_file_formatter = logging.Formatter(log_format)
 
@@ -96,16 +92,15 @@ def add_file_handler_if_specified(
         logger.addHandler(file_handler)
 
 
-def add_console_handler_if_specified(logger: Logger, console_output: bool, log_format: str) -> None:
-    if console_output:
-        log_console_formatter = ColoredFormatter(
-            "%(log_color)s " + log_format,
-            log_colors=LOG_COLORS,
-        )
+def add_console_handler(logger: Logger, log_format: str) -> None:
+    log_console_formatter = ColoredFormatter(
+        "%(log_color)s " + log_format,
+        log_colors=LOG_COLORS,
+    )
 
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(log_console_formatter)
-        logger.addHandler(console_handler)
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(log_console_formatter)
+    logger.addHandler(console_handler)
 
 
 def get_logger(name: str, log_level: int | None = None, extra: dict | None = None) -> CustomLoggerAdapter:
@@ -150,25 +145,16 @@ def build_logger(  # pylint: disable=R0913
         logging.Formatter.converter = time.gmtime
 
     root_logger = logging.getLogger()
-
     clear_existing_handlers(logger=root_logger)
 
-    add_console_handler_if_specified(
-        logger=root_logger,
-        console_output=console_output,
-        log_format=log_format,
-    )
+    if console_output:
+        add_console_handler(logger=root_logger, log_format=log_format)
 
     if log_file:
         if not log_file_path:
             log_file_path = f"{get_project_path_by_file()}/logs/{project_name}.log"
             log_file_path = log_file_path.lower().replace(" ", "_")
-
-        add_file_handler_if_specified(
-            logger=root_logger,
-            log_file_path=log_file_path,
-            log_format=log_format,
-        )
+        add_file_handler(logger=root_logger, log_file_path=log_file_path, log_format=log_format)
 
     logger = CustomLoggerAdapter(logging.getLogger(CUSTOM_LOGGER), extra)
     logger.setLevel(log_level)
