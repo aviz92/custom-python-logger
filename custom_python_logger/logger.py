@@ -10,7 +10,7 @@ from typing import Any
 import yaml
 from colorlog import ColoredFormatter
 
-from custom_python_logger.consts import LOG_COLORS, CustomLoggerLevel
+from custom_python_logger.consts import LOG_COLORS, CustomLoggerLevel, LOG_FORMAT_SHORTPATH
 
 CUSTOM_LOGGER = "custom_logger"
 
@@ -46,6 +46,22 @@ def print_before_logger(project_name: str, sleep_time: float = 0.3) -> None:
     print(f"### {main_string} ###")
     print(f"{number_of_ladder}\n")
     time.sleep(sleep_time)
+
+
+class _ShortPathFilter(logging.Filter):
+    def __init__(self) -> None:
+        super().__init__()
+        self._project_name = os.getenv("PROJECT_NAME")
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if self._project_name and self._project_name in record.pathname:
+            record.shortpath = self._project_name + record.pathname.rsplit(self._project_name, 1)[1]
+        else:
+            record.shortpath = record.pathname
+
+        if ".venv" in record.pathname:
+            record.shortpath = ".venv" + record.pathname.rsplit(".venv", 1)[1]
+        return True
 
 
 class CustomLoggerAdapter(logging.LoggerAdapter):
@@ -118,7 +134,7 @@ def get_logger(name: str, log_level: int | None = None, extra: dict | None = Non
 def build_logger(  # pylint: disable=R0913
     project_name: str,
     extra: dict[str, Any] | None = None,
-    log_format: str = "%(asctime)s | %(levelname)-9s | l.%(levelno)s | %(name)s | %(filename)s:%(lineno)s | %(message)s",  # pylint: disable=C0301
+    log_format: str = LOG_FORMAT_SHORTPATH,
     log_level: int = logging.DEBUG,
     log_file: bool = False,
     log_file_path: str | None = None,
@@ -155,6 +171,9 @@ def build_logger(  # pylint: disable=R0913
             log_file_path = f"{get_project_path_by_file()}/logs/{project_name}.log"
             log_file_path = log_file_path.lower().replace(" ", "_")
         add_file_handler(logger=root_logger, log_file_path=log_file_path, log_format=log_format)
+
+    for handler in root_logger.handlers:
+        handler.addFilter(_ShortPathFilter())
 
     logger = CustomLoggerAdapter(logging.getLogger(CUSTOM_LOGGER), extra)
     logger.setLevel(log_level)

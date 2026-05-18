@@ -1,5 +1,10 @@
 from enum import Enum
 
+LOG_FORMAT_FILENAME = "%(asctime)s | %(levelname)-9s | l.%(levelno)s | %(name)s | %(filename)s:%(lineno)s | %(message)s"
+LOG_FORMAT_SHORTPATH = (
+    "%(asctime)s | %(levelname)-9s | l.%(levelno)s | %(name)s | %(shortpath)s:%(lineno)s | %(message)s"
+)
+
 LOG_COLORS = {
     "DEBUG": "white",
     "INFO": "green",

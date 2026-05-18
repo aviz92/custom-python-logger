@@ -16,7 +16,7 @@ class LoggerTest:
 
 def main() -> None:
     logger = build_logger(
-        project_name="Logger Project Test",
+        project_name="logger_project_test",
         log_level=logging.DEBUG,
         log_file=True,
         # extra={'user': 'test_user'}
