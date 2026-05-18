@@ -20,6 +20,7 @@ Easily integrate structured, readable, and context-rich logging into your Python
 - ✅ **Contextual Logging**: Add extra fields (like user, environment, etc.) to every log message.
 - ✅ **UTC Support**: Optionally log timestamps in UTC for consistency across environments.
 - ✅ **Pretty Formatting**: Built-in helpers for pretty-printing JSON and YAML data in logs.
+- ✅ **Short Path Display**: Automatically trims log file paths to project-relative or `.venv`-relative format for cleaner output.
 - ✅ **Easy Integration**: Simple API for getting a ready-to-use logger anywhere in your codebase.
 
 ---
@@ -58,6 +59,7 @@ logger.critical("This is a critical message.")
 ```
 
 #### Advanced Usage
+
 - Log to a file:
   ```python
   from custom_python_logger import build_logger
@@ -89,16 +91,59 @@ logger.critical("This is a critical message.")
   logger.info(yaml_pretty_format({'foo': 'bar'}))
   ```
 
-- use an existing logger (CustomLoggerAdapter) and set a custom name:
+- Use an existing logger with a custom name:
   ```python
   from custom_python_logger import get_logger
 
   logger = get_logger('some-name')
 
-logger.debug("This is a debug message.")
-logger.info("This is an info message.")
-logger.step("This is a step message.")
+  logger.debug("This is a debug message.")
+  logger.info("This is an info message.")
+  logger.step("This is a step message.")
   ```
+
+- Use a custom log format:
+  ```python
+  from custom_python_logger import build_logger, LOG_FORMAT_FILENAME, LOG_FORMAT_SHORTPATH
+
+  # Default — shows project-relative or .venv-relative path:
+  # 2026-05-18 | INFO      | l.20 | my_app | my_project/app/main.py:42 | message
+  logger = build_logger(project_name='MyApp', log_format=LOG_FORMAT_SHORTPATH)
+
+  # Classic — shows filename only (no path):
+  # 2026-05-18 | INFO      | l.20 | my_app | main.py:42 | message
+  logger = build_logger(project_name='MyApp', log_format=LOG_FORMAT_FILENAME)
+  ```
+
+---
+
+## 🗂️ Short Path Display
+
+By default, `build_logger` uses `LOG_FORMAT_SHORTPATH`, which trims the file path in every log line:
+
+| Path type | Raw `record.pathname` | Displayed as |
+|---|---|---|
+| Project file | `/home/user/my_project/app/main.py` | `my_project/app/main.py` |
+| Dependency in `.venv` | `/home/user/my_project/.venv/lib/python3.13/site-packages/urllib3/pool.py` | `.venv/lib/python3.13/site-packages/urllib3/pool.py` |
+| Unrecognised path | `/tmp/some_script.py` | `/tmp/some_script.py` (full path) |
+
+### Setting your project name
+
+The short-path logic uses the `PROJECT_NAME` environment variable to identify your project root.
+Set it in your `.env` file (loaded automatically on import) or export it before running:
+
+```bash
+# .env
+PROJECT_NAME=my_project
+```
+
+```bash
+# or inline
+PROJECT_NAME=my_project python main.py
+```
+
+> **Note:** `custom-python-logger` calls `load_dotenv()` on import, which reads your `.env` file automatically.
+> If you set `PROJECT_NAME` programmatically, do so **before** importing `custom_python_logger` to ensure it takes effect.
 
 ---
 
