@@ -10,7 +10,7 @@ from typing import Any
 import yaml
 from colorlog import ColoredFormatter
 
-from custom_python_logger.consts import LOG_COLORS, CustomLoggerLevel, LOG_FORMAT_SHORTPATH
+from custom_python_logger.consts import LOG_COLORS, LOG_FORMAT_SHORTPATH, CustomLoggerLevel
 
 CUSTOM_LOGGER = "custom_logger"
 
