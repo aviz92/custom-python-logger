@@ -10,7 +10,7 @@ from typing import Any
 import yaml
 from colorlog import ColoredFormatter
 
-from custom_python_logger.consts import LOG_COLORS, LOG_FORMAT_SHORTPATH, CustomLoggerLevel
+from custom_python_logger.consts import LOG_COLORS, LOG_FORMAT_SHORTPATH, CustomLoggerLevel, LOG_FORMAT_FILENAME
 
 CUSTOM_LOGGER = "custom_logger"
 
@@ -61,6 +61,14 @@ class _ShortPathFilter(logging.Filter):
 
         if ".venv" in record.pathname:
             record.shortpath = ".venv" + record.pathname.rsplit(".venv", 1)[1]
+        return True
+
+
+class _StripNamespaceFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        prefix = CUSTOM_LOGGER + "."
+        if record.name.startswith(prefix):
+            record.name = record.name[len(prefix):]
         return True
 
 
@@ -121,8 +129,11 @@ def add_console_handler(logger: Logger, log_format: str) -> None:
 
 def get_logger(name: str, log_level: int | None = None, extra: dict | None = None) -> CustomLoggerAdapter:
     custom_logger = logging.getLogger(CUSTOM_LOGGER)
+
     full_name = f"{CUSTOM_LOGGER}.{name}"
-    new_logger = CustomLoggerAdapter(logging.getLogger(full_name), extra=extra)
+    underlying = logging.getLogger(full_name)
+    underlying.addFilter(_StripNamespaceFilter())
+    new_logger = CustomLoggerAdapter(underlying, extra=extra)
 
     if log_level is None:
         log_level = custom_logger.level
@@ -134,7 +145,7 @@ def get_logger(name: str, log_level: int | None = None, extra: dict | None = Non
 def build_logger(  # pylint: disable=R0913
     project_name: str,
     extra: dict[str, Any] | None = None,
-    log_format: str = LOG_FORMAT_SHORTPATH,
+    log_format: str = LOG_FORMAT_FILENAME,
     log_level: int = logging.DEBUG,
     log_file: bool = False,
     log_file_path: str | None = None,
