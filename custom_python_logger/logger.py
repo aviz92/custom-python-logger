@@ -10,7 +10,7 @@ from typing import Any
 import yaml
 from colorlog import ColoredFormatter
 
-from custom_python_logger.consts import LOG_COLORS, LOG_FORMAT_SHORTPATH, CustomLoggerLevel, LOG_FORMAT_FILENAME
+from custom_python_logger.consts import LOG_COLORS, LOG_FORMAT_FILENAME, CustomLoggerLevel
 
 CUSTOM_LOGGER = "custom_logger"
 
@@ -68,7 +68,7 @@ class _StripNamespaceFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         prefix = CUSTOM_LOGGER + "."
         if record.name.startswith(prefix):
-            record.name = record.name[len(prefix):]
+            record.name = record.name[len(prefix) :]
         return True
 
 
