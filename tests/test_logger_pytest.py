@@ -11,7 +11,7 @@ from custom_python_logger import CustomLoggerAdapter, build_logger, json_pretty_
 
 
 @pytest.fixture
-def temp_log_file() -> Generator[str, None, None]:
+def temp_log_file() -> Generator[str]:
     with tempfile.NamedTemporaryFile(delete=False) as f:
         yield f.name
     os.remove(f.name)

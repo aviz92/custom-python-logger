@@ -26,7 +26,7 @@ def _make_record(pathname: str, name: str = "custom_logger.test") -> logging.Log
 
 
 @pytest.fixture
-def temp_log_file() -> Generator[str, None, None]:  # pylint: disable=W0621
+def temp_log_file() -> Generator[str]:  # pylint: disable=W0621
     with tempfile.NamedTemporaryFile(delete=False, suffix=".log") as f:
         yield f.name
     os.remove(f.name)
