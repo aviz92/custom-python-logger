@@ -26,7 +26,7 @@ def _make_record(pathname: str, name: str = "custom_logger.test") -> logging.Log
 
 
 @pytest.fixture
-def temp_log_file() -> Generator[str]:  # pylint: disable=W0621
+def temp_log_file() -> Generator[str]:
     with tempfile.NamedTemporaryFile(delete=False, suffix=".log") as f:
         yield f.name
     os.remove(f.name)
@@ -55,9 +55,7 @@ class TestShortPathFilterLogic:
         assert result is True, "filter() must always return True"
         assert (
             record.shortpath == "my_project/app/main.py"
-        ), (  # pylint: disable=E1101
-            f"Expected 'my_project/app/main.py', got '{record.shortpath}'"  # pylint: disable=E1101
-        )
+        ), f"Expected 'my_project/app/main.py', got '{record.shortpath}'"
 
     def test_project_name_not_in_path_falls_back_to_full_pathname(self) -> None:
         with patch.dict(os.environ, {"PROJECT_NAME": "my_project"}):
@@ -68,7 +66,7 @@ class TestShortPathFilterLogic:
 
         assert (
             record.shortpath == "/home/user/other_project/app/main.py"
-        ), f"Expected full pathname, got '{record.shortpath}'"  # pylint: disable=E1101  # pylint: disable=E1101
+        ), f"Expected full pathname, got '{record.shortpath}'"
 
     def test_no_project_name_env_falls_back_to_full_pathname(self) -> None:
         with patch.dict(os.environ, {}, clear=True):
@@ -79,7 +77,7 @@ class TestShortPathFilterLogic:
 
         assert (
             record.shortpath == "/home/user/my_project/app/main.py"
-        ), f"Expected full pathname, got '{record.shortpath}'"  # pylint: disable=E1101  # pylint: disable=E1101
+        ), f"Expected full pathname, got '{record.shortpath}'"
 
     def test_venv_in_path_sets_venv_relative_shortpath(self) -> None:
         with patch.dict(os.environ, {"PROJECT_NAME": "my_project"}):
@@ -90,7 +88,7 @@ class TestShortPathFilterLogic:
 
         assert (
             record.shortpath == ".venv/lib/python3.13/site-packages/urllib3/pool.py"
-        ), f"Expected .venv-relative path, got '{record.shortpath}'"  # pylint: disable=E1101  # pylint: disable=E1101
+        ), f"Expected .venv-relative path, got '{record.shortpath}'"
 
     def test_venv_takes_precedence_over_project_name(self) -> None:
         with patch.dict(os.environ, {"PROJECT_NAME": "my_project"}):
@@ -99,9 +97,7 @@ class TestShortPathFilterLogic:
 
         f.filter(record)
 
-        assert record.shortpath.startswith(
-            ".venv/"
-        ), f"Expected .venv-relative path, got '{record.shortpath}'"  # pylint: disable=E1101  # pylint: disable=E1101
+        assert record.shortpath.startswith(".venv/"), f"Expected .venv-relative path, got '{record.shortpath}'"
 
     def test_filter_always_returns_true(self) -> None:
         with patch.dict(os.environ, {"PROJECT_NAME": "my_project"}):
