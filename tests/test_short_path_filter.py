@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from custom_python_logger import build_logger
+from custom_python_logger import LOG_FORMAT_SHORTPATH, build_logger
 from custom_python_logger.logger import _ShortPathFilter
 
 
@@ -26,7 +26,7 @@ def _make_record(pathname: str, name: str = "custom_logger.test") -> logging.Log
 
 
 @pytest.fixture
-def temp_log_file() -> Generator[str, None, None]:  # pylint: disable=W0621
+def temp_log_file() -> Generator[str]:  # pylint: disable=W0621
     with tempfile.NamedTemporaryFile(delete=False, suffix=".log") as f:
         yield f.name
     os.remove(f.name)
@@ -148,6 +148,7 @@ class TestBuildLoggerFilterIntegration:
         with patch.dict(os.environ, {"PROJECT_NAME": "custom-python-logger"}):
             logger = build_logger(
                 project_name="ShortPathTest",
+                log_format=LOG_FORMAT_SHORTPATH,
                 log_file=True,
                 log_file_path=temp_log_file,
                 console_output=False,

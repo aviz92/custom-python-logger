@@ -26,7 +26,7 @@ class ExtendedLoggerAdapter(CustomLoggerAdapter):
         self.log(logger_level, msg, *args, **kwargs)
 
 
-def build_extended_logger(  # pylint: disable=R0913
+def build_extended_logger(
     project_name: str,
     extra: dict[str, Any] | None = None,
     log_format: str = "%(asctime)s | %(levelname)-9s | l.%(levelno)s | %(name)s | %(filename)s:%(lineno)s | %(message)s",  # pylint: disable=C0301

@@ -4,7 +4,7 @@
 repos: # Black → isort → Ruff (fix=false) → Pylint
   # ### pre-commit-hooks ###
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace         # Removes trailing spaces
       - id: end-of-file-fixer           # Ensures a file ends with a newline
@@ -34,7 +34,7 @@ repos: # Black → isort → Ruff (fix=false) → Pylint
 
     # ### black ###
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 26.5.1
     hooks:
       - id: black
         name: Black (Python code formatter)
@@ -45,7 +45,7 @@ repos: # Black → isort → Ruff (fix=false) → Pylint
 
     # ### ruff ###
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.7
+    rev: v0.16.5
     hooks:
       - id: ruff
         name: Ruff (Python linter)
@@ -57,7 +57,7 @@ repos: # Black → isort → Ruff (fix=false) → Pylint
 
     # ### pylint ###
   - repo: https://github.com/pycqa/pylint
-    rev: v3.0.3
+    rev: v4.0.8
     hooks:
       - id: pylint
         name: Pylint (Python linter)

@@ -142,7 +142,7 @@ def get_logger(name: str, log_level: int | None = None, extra: dict | None = Non
     return new_logger
 
 
-def build_logger(  # pylint: disable=R0913
+def build_logger(
     project_name: str,
     extra: dict[str, Any] | None = None,
     log_format: str = LOG_FORMAT_FILENAME,
