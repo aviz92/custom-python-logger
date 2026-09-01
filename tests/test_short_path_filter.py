@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from custom_python_logger import build_logger
+from custom_python_logger import LOG_FORMAT_SHORTPATH, build_logger
 from custom_python_logger.logger import _ShortPathFilter
 
 
@@ -148,6 +148,7 @@ class TestBuildLoggerFilterIntegration:
         with patch.dict(os.environ, {"PROJECT_NAME": "custom-python-logger"}):
             logger = build_logger(
                 project_name="ShortPathTest",
+                log_format=LOG_FORMAT_SHORTPATH,
                 log_file=True,
                 log_file_path=temp_log_file,
                 console_output=False,
