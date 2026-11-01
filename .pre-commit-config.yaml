@@ -1,5 +1,10 @@
 # https://pre-commit.com
 # https://github.com/pre-commit
+# To install pre-commit: `uv run pre-commit install --hook-type pre-push`
+# pre-commit run --all-files
+# uv run pre-commit run --all-files
+
+default_stages: [pre-commit, pre-push]
 
 repos: # Black → isort → Ruff (fix=false) → Pylint
   # ### pre-commit-hooks ###
@@ -10,7 +15,7 @@ repos: # Black → isort → Ruff (fix=false) → Pylint
       - id: end-of-file-fixer           # Ensures a file ends with a newline
       - id: check-merge-conflict        # Checks for merge conflict markers
       - id: check-added-large-files     # Prevents committing large files
-        args: [ "--maxkb=100" ]         # Adjust size limit as needed
+        args: [ "--maxkb=500" ]         # Adjust size limit as needed
       - id: check-yaml                  # Validates YAML syntax
       - id: check-json                  # Validates JSON syntax
       - id: check-toml                  # Validates TOML files
@@ -32,9 +37,9 @@ repos: # Black → isort → Ruff (fix=false) → Pylint
       # - id: double-quote-string-fixer # Converts single quotes to double quotes in strings
       # - id: name-tests-test # Ensures test files, classes, and functions are named starting with 'test'
 
-    # ### black ###
+  # ### black ###
   - repo: https://github.com/psf/black
-    rev: 26.5.1
+    rev: 26.10.1
     hooks:
       - id: black
         name: Black (Python code formatter)
@@ -43,9 +48,9 @@ repos: # Black → isort → Ruff (fix=false) → Pylint
         ]
         language_version: python3
 
-    # ### ruff ###
+  # ### ruff ###
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.5
+    rev: v0.17.3
     hooks:
       - id: ruff
         name: Ruff (Python linter)
@@ -55,9 +60,9 @@ repos: # Black → isort → Ruff (fix=false) → Pylint
         ]
         types: [ python ]
 
-    # ### pylint ###
+  # ### pylint ###
   - repo: https://github.com/pycqa/pylint
-    rev: v4.0.8
+    rev: v4.1.3
     hooks:
       - id: pylint
         name: Pylint (Python linter)
@@ -65,4 +70,14 @@ repos: # Black → isort → Ruff (fix=false) → Pylint
           - "--rcfile=.config/pylintrc"
           - "--init-hook=import sys; sys.path.insert(0, 'src')"
           - "--enable-all-extensions"
+        exclude: ^tests/  # ^(tests/|other_dir/)
+        additional_dependencies: [ "pylint-django", "pylint-flask" ]
+
+      - id: pylint
+        name: Pylint (tests)
+        args:
+          - "--rcfile=.config/pylintrc_tests"
+          - "--init-hook=import sys; sys.path.insert(0, 'src')"
+          - "--enable-all-extensions"
+        files: ^tests/
         additional_dependencies: [ "pylint-django", "pylint-flask" ]

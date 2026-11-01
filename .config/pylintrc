@@ -3,8 +3,6 @@
 [FORMAT]
 max-line-length=120
 max-attributes=15
-
-[DESIGN]
 max-args=8
 max-positional-arguments=8
 
